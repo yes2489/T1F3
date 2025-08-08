@@ -1,8 +1,10 @@
 package com.waiting.system.controller;
+
 import java.util.ArrayList;
 import com.waiting.system.model.Restaurant;
 import com.waiting.system.service.RestaurantManager;
 import com.waiting.system.util.UIHandler;
+
 public class CommandProcessor {
     private final RestaurantManager manager;
     // 생성자에서 주입 받기
@@ -31,7 +33,7 @@ public class CommandProcessor {
                 handleHelp();
                 break;
             default:
-                UIHandler.addLine(":x: 지원하지 않는 명령어입니다. 'help'를 입력해 사용 가능한 명령을 확인하세요.");
+                UIHandler.addLine("☑ 지원하지 않는 명령어입니다. 'help'를 입력해 사용 가능한 명령을 확인하세요.");
                 UIHandler.flush("");
         }
     }
@@ -48,7 +50,7 @@ public class CommandProcessor {
         UIHandler.addLine("");
         UIHandler.addLine("3) quit <식당ID:int> <퇴장인원:int>");
         UIHandler.addLine("   - 손님 퇴장 후 입장 대기 중인 다음 대기 손님을 안내합니다.");
-        UIHandler.addLine("   - 예) quit 12 101");
+        UIHandler.addLine("   - 예) quit 101 12");
         UIHandler.addLine("");
         UIHandler.addLine("4) help");
         UIHandler.addLine("   - 명령어와 사용법을 표시합니다.");
@@ -88,9 +90,9 @@ public class CommandProcessor {
         boolean isCanceled = restaurant.cancelReservation(Integer.parseInt(tokens[2]), tokens[1]);
         // 반환된 예약 취소 여부 출력
         if (isCanceled) {
-            UIHandler.addLine(":흰색_확인_표시: 예약이 취소되었습니다.");
+            UIHandler.addLine("☑ 예약이 취소되었습니다.");
         } else {
-            UIHandler.addLine(":x: 예약 취소에 실패했습니다. (예약을 찾을 수 없음)");
+            UIHandler.addLine("☑ 예약 취소에 실패했습니다. (예약을 찾을 수 없음)");
         }
         UIHandler.flush("");
     }
@@ -106,7 +108,7 @@ public class CommandProcessor {
         // 예약 후 대기 번호 반환
         int waitingNumber = restaurant.makeReservation(tokens[1], Integer.parseInt(tokens[2]));
         // 콘솔 출력
-        UIHandler.addLine(":흰색_확인_표시: 예약이 완료되었습니다. 당신의 대기 번호는 " + waitingNumber + "번입니다.");
+        UIHandler.addLine("☑ 예약이 완료되었습니다. 당신의 대기 번호는 " + waitingNumber + "번입니다.");
         UIHandler.flush("");
     }
 }
