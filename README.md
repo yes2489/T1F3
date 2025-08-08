@@ -1,68 +1,96 @@
-# T1F3 - 이게 무슨 대기야❓
+# T1F3 - 이게 무슨 대기야??
+### Java Console Restaurant Waiting System
 
-Java 기반 콘솔 애플리케이션으로, 식당 예약 대기 시스템을 시뮬레이션합니다.  
-손님은 전화번호와 인원수를 기반으로 식당에 예약을 하고, 식당은 좌석 상황에 따라 예약을 수락하거나 입장시킬 수 있습니다.
-
----
-
-## 📁 프로젝트 구조
-
-```
-waitingSystem/
-├── pom.xml
-├── src
-│   ├── main
-│   │   ├── java
-│   │   │   └── com.waiting.system
-│   │   │       ├── exception
-│   │   │       │   ├── InvalidPhoneNumberException.java
-│   │   │       │   └── ReservationNotFoundException.java
-│   │   │       ├── model
-│   │   │       │   ├── Customer.java
-│   │   │       │   ├── Reservation.java
-│   │   │       │   └── Restaurant.java
-│   │   │       ├── service
-│   │   │       │   └── ReservationManager.java
-│   │   │       ├── util
-│   │   │       │   └── RestaurantLogger.java
-│   │   │       └── Main.java
-│   │   └── resources
-│   │       └── logback.xml
-│   └── test
-│       └── java
-```
+전화번호, 인원수, 식당 ID 기반으로 예약을 관리하고, 손님 퇴장 후 자동으로 대기 손님을 입장시키는 Java 콘솔 애플리케이션입니다.  
+여러 식당의 예약 큐를 독립적으로 관리하며, 명령어 기반으로 동작합니다.
 
 ---
 
-## 🛠️ Windows에서 Maven 설치
+## ✅ 주요 기능
 
-1. [공식 Apache Maven 다운로드 페이지](https://maven.apache.org/download.cgi)에서 `.zip` 파일 다운로드
-2. 압축 해제 (예: `C:\tools\apache-maven-3.9.6`)
-3. 환경 변수 설정:
-   - 시스템 변수 → 새로 만들기  
-     `MAVEN_HOME = C:\tools\apache-maven-3.9.6`
-   - `Path` 편집 → `C:\tools\apache-maven-3.9.6\bin` 추가
-4. 커맨드 프롬프트 새로 열기
-5. 아래 명령어로 설치 확인:
+- 전화번호 기반 예약 및 예약 취소
+- FIFO 대기열 방식 입장 처리
+- 인원 수만큼 퇴장 시 자동 입장
+- 명령어 기반 인터페이스
+- 예약/취소/입장 로그 출력
+- 콘솔 출력 버퍼링 처리
+- 외부 Console 라이브러리 활용
+- SLF4J 기반 로그 시스템 도입 (RestaurantLogger)
+
+---
+
+## 🗂️ 프로젝트 구조
+
+```
+
+📦 waitingSystem
+┣ 📂 src
+┃ ┣ 📂 com.waiting.system.controller    # CommandProcessor - 명령어 처리
+┃ ┣ 📂 com.waiting.system.model        # Restaurant, Reservation - 도메인 모델
+┃ ┣ 📂 com.waiting.system.service      # RestaurantManager, ReservationManager
+┃ ┣ 📂 com.waiting.system.util         # UIHandler, RestaurantLogger
+┃ ┗ 📜 Main.java                       # 진입점
+┣ 📂 lib                               # 외부 콘솔 입력용 Console.jar
+┣ 📜 pom.xml                           # Maven 프로젝트 설정
+┗ 📜 README.md                         # 프로젝트 문서
+
+```
+
+---
+
+## 💬 사용 가능한 명령어
+
+| 명령어 | 형식 | 설명 |
+|--------|------|------|
+| 예약 | `reservation <전화번호> <인원수:int> <식당ID:int>` | 예약을 추가하고 대기번호를 반환합니다 |
+| 취소 | `cancel <전화번호> <식당ID:int>` | 전화번호에 해당하는 모든 예약을 취소합니다 |
+| 퇴장 및 입장 | `quit <퇴장인원:int> <식당ID:int>` | 퇴장 인원 수만큼 입장 가능한 손님을 자동 입장시킵니다 |
+| 도움말 | `help` | 명령어 사용법을 출력합니다 |
+
+### 📌 예시
 
 ```bash
-mvn -v
-```
+reservation 01012345678 3 1
+cancel 01012345678 1
+quit 4 1
+help
+````
 
 ---
 
-## ⚙️ 프로젝트 빌드 및 실행
+### 🎥 실행 예시 (Console 시연)
+![콘솔 시연]()
 
-### 🔹 JAR 파일 생성
+---
+
+## ⚙️ 실행 방법
+
+### 1. 의존성 설치 및 빌드
 
 ```bash
-cd waitingSystem
 mvn clean package
 ```
 
-- 결과 파일: `target/waiting-system.jar`
+> `lib/Console.jar`는 Maven 중앙 저장소에 존재하지 않는 외부 라이브러리이므로,  
+> 아래 명령어를 통해 로컬 Maven 저장소에 수동 등록해야 합니다. (한 번만 실행하면 됩니다.)
 
-### 🔹 JAR 실행
+```bash
+mvn install:install-file -Dfile=lib/Console.jar -DgroupId=com.example -DartifactId=console -Dversion=1.0 -Dpackaging=jar
+```
+
+> 위 라이브러리는 pom.xml에서 다음과 같이 system scope로 참조됩니다:
+
+```xml
+<dependency>
+  <groupId>com.example</groupId>
+  <artifactId>console</artifactId>
+  <version>1.0</version>
+  <scope>system</scope>
+  <systemPath>${project.basedir}/lib/Console.jar</systemPath>
+</dependency>
+```
+
+### 2. 실행
 
 ```bash
 java -jar target/waiting-system.jar
@@ -70,51 +98,31 @@ java -jar target/waiting-system.jar
 
 ---
 
-## 🧩 클래스 다이어그램
+## 🔧 기술 스택
 
-```
-+---------------------+        +---------------------+        +---------------------+
-|     Customer        |        |     Reservation     |        |     Restaurant      |
-+---------------------+        +---------------------+        +---------------------+
-| - id: int           |        | - id: int           |        | - id: int           |
-| - phoneNum: String  |        | - restaurantId: int |        | - name: String      |
-| - memberNum: int    |        | - customerId: int   |        | - description: Str  |
-| - reservation: Res  |        | - memberNum: int    |        | - seatCount: int    |
-+---------------------+        | - status: enum      |        | - waitingList: Queue|
-| +makeReservation()  |        | - createdAt: Date   |        +---------------------+
-| +cancelReservation()|        +---------------------+        | +receiveReservation()|
-| +enterRestaurant()  |        | +cancel()           |        | +acceptReservation() |
-+---------------------+        | +markAsEntered()    |        | +acceptReservationByG|
-                               | +isEligible()       |        | +notifyAvailable()   |
-                               +---------------------+        +---------------------+
-
-                   +-----------------------------------------+
-                   |        ReservationManager               |
-                   +-----------------------------------------+
-                   | - reservations: List<Reservation>       |
-                   | - restaurants: Map<Integer, Restaurant> |
-                   | - customers: Map<Integer, Customer>     |
-                   +-----------------------------------------+
-                   | +registerReservation(...)               |
-                   | +cancelReservation(...)                 |
-                   | +acceptNextTeam(...)                    |
-                   | +getWaitingCount(...)                   |
-                   +-----------------------------------------+
-
-                   +---------------------------+
-                   |   RestaurantLogger        |
-                   +---------------------------+
-                   | +logReservationReceived() |
-                   | +logReservationAccepted() |
-                   | +logReservationCancelled()|
-                   | +logReservationEntered()  |
-                   +---------------------------+
-```
+| 항목         | 내용                                  |
+| ---------- | ----------------------------------- |
+| Language   | Java 17                             |
+| Build Tool | Maven                               |
+| 외부 라이브러리   | Console.jar (콘솔 입력 지원)              |
+| 로깅         | SLF4J, RestaurantLogger (자체 로그 시스템) |
 
 ---
 
-## 🔚 기타
+## 🚀 향후 개선 예정
 
-- 로그 설정은 `src/main/resources/logback.xml`에서 설정 가능
-- 테스트 코드는 `src/test/java` 경로에 작성
-- SLF4J + Logback 기반 로깅 사용
+* 예약 현황 조회 명령어 추가 (`status`, `seat` 등)
+* 동시성(멀티스레드) 환경 고려
+* 데이터 저장 기능 추가 (파일 or DB)
+
+---
+
+## 👨‍💻 개발자
+
+| <img alt="profile" src ="https://github.com/kswdot.png" width ="100px"> | <img alt="profile" src ="https://github.com/TaekkiMin.png" width ="100px"> | <img alt="profile" src ="https://github.com/yes2489.png" width ="100px"> | <img alt="profile" src ="https://github.com/JBL28.png" width ="100px"> |
+| :--------------------------------------------------------------------------: | :------------------------------------------------------------------------: | :------------------------------------------------------------------------: | :------------------------------------------------------------------------: |
+|                                김성은                                 |                                   민택기                                   |                                   양은서                                   |                                  이정복                                 |
+|                [kswdot](https://github.com/kswdot)                 |                 [TaekkiMin](https://github.com/TaekkiMin)                  |                 [yes2489](https://github.com/yes2489)                  |                  [JBL28](https://github.com/JBL28)                   |
+
+* 프로젝트 목적: Java 콘솔 기반 입출력 및 로직 설계 실습
+* 사용 기술: Java, Maven, SLF4J
