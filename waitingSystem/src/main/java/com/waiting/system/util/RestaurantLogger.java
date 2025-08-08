@@ -1,45 +1,56 @@
 package com.waiting.system.util;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
- * 시스템 동작 흐름을 기록하고 사용자에게 로그 메시지를 출력하는 클래스
- * - 주요 이벤트: 예약 생성, 취소, 입장, 호출
- * - 출력은 UIHandler를 통해 화면에 누적됨
+ * 예약 시스템 동작 흐름을 기록하는 전용 로거 클래스
+ * - 콘솔 출력은 UIHandler에서 담당
+ * - 이 클래스는 파일 또는 콘솔 로그 기록만 수행
  */
 public class RestaurantLogger {
+    private static final Logger logger = LoggerFactory.getLogger(RestaurantLogger.class);
 
-    /** 내부 로그 리스트 (멀티스레드 환경 대응) - 로깅 메시지를 UIHandler로 보내기 전에 보관하거나 추후 디버깅으로 활용
-     * synchronizedList: 멀티 스레드 환경에서 데이터 안전성을 보장하는 자료 구조.
-     *                   내용을 읽고 쓰고 지우고 하는데 타 스레드와의 충돌없이 사용 가능
-     *                   (synchronized 키워드를 통해 thread-safe를 구현)
-     * */
-    private final List<String> logs = Collections.synchronizedList(new ArrayList<>());
-
-    /** 로그 시간 형식 (yy-MM-dd HH:mm:ss) */
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd HH:mm:ss");
-
-    // TODO: 예약 생성 로그 출력, 예약 취소 로그 출력, 입장 완료 로그 출력, 호출 로그 출력
-
-    /**
-     * 로그 메시지 포맷 생성
-     * @param event 이벤트 이름 (예: 예약 생성)
-     * @param detail 상세 메시지
-     * @return 포맷된 로그 문자열
-     */
-    private String logFormat(String event, String detail) {
-        return "[" + LocalDateTime.now().format(formatter) + "] [" + event + "] " + detail;
+    /** 예약 생성 로그 */
+    public static void logReservationCreated(String phone, String restaurantId, int waitingNumber) {
+        logger.info("✅ 예약 생성: 전화번호={}, 식당ID={}, 대기번호={}", phone, restaurantId, waitingNumber);
     }
 
-    /**
-     * 로그 저장 및 UI 출력 누적 처리
-     * @param msg 로그 메시지
-     */
-    private void output(String msg) {
-        logs.add(msg);              // 로그 리스트에 저장
-        UIHandler.addLine(msg);    // UIHandler에 출력 누적
-        // flush()는 외부에서 호출
+    /** 예약 취소 로그 */
+    public static void logReservationCancelled(String phone, String restaurantId, boolean success) {
+        if (success) {
+            logger.info("🗑️ 예약 취소 성공: 전화번호={}, 식당ID={}", phone, restaurantId);
+        } else {
+            logger.warn("⚠️ 예약 취소 실패: 전화번호={}, 식당ID={}", phone, restaurantId);
+        }
+    }
+
+    /** 손님 퇴장 로그 */
+    public static void logCustomerQuit(String phone, String restaurantId) {
+        logger.info("🚪 손님 퇴장: 전화번호={}, 식당ID={}", phone, restaurantId);
+    }
+
+    /** 입장 처리된 다음 손님들 로그 */
+    public static void logNextCustomers(List<String> phoneNumbers) {
+        if (phoneNumbers == null || phoneNumbers.isEmpty()) {
+            logger.info("📢 다음 입장 손님 없음");
+            return;
+        }
+
+        for (String phone : phoneNumbers) {
+            logger.info("📢 다음 입장 손님: 전화번호={}", phone);
+        }
+    }
+
+    /** 좌석 현황 로그 */
+    public static void logSeatStatus(String restaurantId, int leftSeats, int waitingSize) {
+        logger.info("💺 좌석 현황 - 식당ID={}, 남은 좌석={}, 대기 인원={}", restaurantId, leftSeats, waitingSize);
+    }
+
+    /** 시스템 예외 로그 */
+    public static void logException(String context, Exception e) {
+        logger.error("❌ 예외 발생 - 위치: {}, 메시지: {}", context, e.getMessage(), e);
     }
 }
