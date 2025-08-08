@@ -40,8 +40,10 @@ public class CommandProcessor {
     	
     	// 반환된 손님 번호 목록 출력
     	for (int i = 0; i < nextCustomerNum.size(); i++) {
-    	    System.out.println("들어올 손님 번호는 " + nextCustomerNum.get(i) + "입니다.");
+    		UIHandler.addLine("들어올 손님 번호는 " + nextCustomerNum.get(i) + "입니다.");
     	}
+    	
+    	UIHandler.flush("");
     }
 
     private void handleCancel(String[] tokens) {
@@ -53,10 +55,12 @@ public class CommandProcessor {
     	
     	// 반환된 예약 취소 여부 출력
     	if (isCanceled) {
-    		System.out.println("예약이 취소되었습니다.");
+    		UIHandler.addLine("예약이 취소되었습니다.");
     	} else {
-    		System.out.println("예약 취소에 실패했습니다.");
+    		UIHandler.addLine("예약 취소에 실패했습니다.");
     	}
+    	
+    	UIHandler.flush("");
     }
 
     private void handleReservation(String[] tokens) {
@@ -67,7 +71,9 @@ public class CommandProcessor {
     	int waitingNumber = restaurant.makeReservation(tokens[1], tokens[2]);
     		
     	// 콘솔 출력
-    	System.out.println("예약이 완료되었습니다. 당신의 대기 번호는 " + waitingNumber + "번입니다.");
+    	UIHandler.addLine("예약이 완료되었습니다. 당신의 대기 번호는 " + waitingNumber + "번입니다.");
+    	
+    	UIHandler.flush("");
     }
 
 }
