@@ -1,5 +1,5 @@
 package com.waiting.system.model;
 
-public class Reservation {
-
+public class Reservations {
+    
 }
