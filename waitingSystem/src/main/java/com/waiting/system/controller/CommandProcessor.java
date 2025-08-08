@@ -1,6 +1,5 @@
 package com.waiting.system.controller;
 
-import com.waiting.system.util.UIHandler;
 
 public class CommandProcessor {
     /**
