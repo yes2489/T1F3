@@ -45,6 +45,18 @@ public class CommandProcessor {
     }
 
     private void handleCancel(String[] tokens) {
+    	// 식당 ID로 해당 식당 객체 가져오기
+    	Restaurant restaurant = restaurantManager.getRestaurantById(tokens[1]);
+    	
+    	// 예약 취소 여부 반환
+    	boolean isCanceled = restaurant.cancelReservation(tokens[1], tokens[0]);
+    	
+    	// 반환된 예약 취소 여부 출력
+    	if (isCanceled) {
+    		System.out.println("예약이 취소되었습니다.");
+    	} else {
+    		System.out.println("예약 취소에 실패했습니다.");
+    	}
     }
 
     private void handleReservation(String[] tokens) {
