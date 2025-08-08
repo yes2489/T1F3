@@ -1,37 +1,63 @@
 package com.waiting.system.model;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import com.waiting.system.model.Reservation;
 
 public class ReservationManager {
-    private int restaurantId;
-    private int maxNum;
-    private Queue<com.waiting.system.model.Reservation> reservationQueue;
+    final private Queue<Reservation> reservationQueue;
 
-    ReservationManager(int ID, int MaxNum) {
-        this.restaurantId = ID;
-        this.maxNum = MaxNum;
-        this.reservationQueue = new LinkedList<>();
+    public ReservationManager() {
+        this.reservationQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public int getMaxNum() {
-        return maxNum;
+    public int getWaitingLength() {
+        return reservationQueue.size();
     }
 
-    public int getRestaurantId() {
-        return restaurantId;
+    public Reservation addReservation(String phoneNum, int memberNum) {
+        Reservation newReservation = new Reservation(memberNum, phoneNum);
+
+        reservationQueue.add(newReservation);
+        return newReservation;
     }
 
-    public Queue<com.waiting.system.model.Reservation> getReservationQueue() {
-        return reservationQueue;
-
-
+    public void cancel(String phoneNum) {
+        reservationQueue.removeIf(r -> phoneNum != null && phoneNum.equals(r.getPhoneNum()));
     }
 
-    public boolean reservation() {
-        return true;
+    public Reservation call() {
+        return reservationQueue.poll();
+    }
+
+    public Reservation callByNum(int memberNum) {
+        for (Reservation r : reservationQueue) {
+            if (r.getMemberNum() <= memberNum) {
+                if (reservationQueue.remove(r)) { // 안전하게 제거
+                    return r;
+                }
+            }
+        }
+        return null;
+    }
+
+    public int getHowFar(String phoneNum) {
+        if (phoneNum == null) return -1;
+        int count = 0;
+        for(Reservation r : reservationQueue) {
+            if(r.getPhoneNum().equals(phoneNum)) {
+                return count + 1;
+            }
+            count++;
+        }
+        return -1;
+    }
+
+    public int getFirstMemberNum() {
+        Reservation peek = reservationQueue.peek();
+        if(peek != null)
+            return peek.getMemberNum();
+        else
+            return -1;
     }
 }
