@@ -37,10 +37,12 @@ public class ReservationManager {
     /**
      * 전화번호를 받아 해당 번호를 갖는 예약 객체들을 "모두" 삭제합니다.
      * @param phoneNum 예약자 전화번호
+     * @return 삭제 성공 여부 (삭제된 항목이 하나라도 있으면 true, 없으면 false)
      */
-    public void cancel(String phoneNum) {
-        reservationQueue.removeIf(r -> phoneNum != null && phoneNum.equals(r.getPhoneNum()));
+    public boolean cancel(String phoneNum) {
+        return reservationQueue.removeIf(r -> phoneNum != null && phoneNum.equals(r.getPhoneNum()));
     }
+
 
     /**
      * 큐의 가장 앞에 있는 팀의 예약 객체를 반환합니다.

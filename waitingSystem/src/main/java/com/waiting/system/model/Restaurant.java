@@ -59,8 +59,7 @@ public class Restaurant {
 
 
     public boolean cancelReservation(int RestaurantId, String phoneNum) {
-        reservationManager.cancel(phoneNum);
-        return true;
+        return reservationManager.cancel(phoneNum);
     }
 
 
