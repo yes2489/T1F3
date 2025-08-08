@@ -1,4 +1,4 @@
-package main.java.com.waiting.system.model;
+package com.waiting.system.model;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

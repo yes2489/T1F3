@@ -1,7 +1,7 @@
-package test.java.com.waiting.system.model;
+package com.waiting.system.model;
 
-import main.java.com.waiting.system.model.Reservation;
-import main.java.com.waiting.system.model.ReservationManager;
+import com.waiting.system.model.Reservation;
+import com.waiting.system.model.ReservationManager;
 
 public class ReservationManagerTest {
 
