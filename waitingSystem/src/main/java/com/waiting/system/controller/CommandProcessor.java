@@ -32,6 +32,16 @@ public class CommandProcessor {
     }
 
     private void handleQuit(String[] tokens) {
+    	// 식당 ID로 해당 식당 객체 가져오기
+    	Restaurant restaurant = restaurantManager.getRestaurantById(tokens[1]);
+    	
+    	// 손님 퇴장 후 입장 대기 중인 다음 손님 번호 목록 반환
+    	ArrayList<String> nextCustomerNum = restaurant.quit(tokens[0], tokens[1]);
+    	
+    	// 반환된 손님 번호 목록 출력
+    	for (int i = 0; i < nextCustomerNum.size(); i++) {
+    	    System.out.println("들어올 손님 번호는 " + nextCustomerNum.get(i) + "입니다.");
+    	}
     }
 
     private void handleCancel(String[] tokens) {
