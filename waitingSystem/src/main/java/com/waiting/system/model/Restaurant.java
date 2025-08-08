@@ -2,6 +2,8 @@ package com.waiting.system.model;
 
 import java.util.*;
 
+import com.waiting.system.service.ReservationManager;
+
 public class Restaurant {
 
     private int id;

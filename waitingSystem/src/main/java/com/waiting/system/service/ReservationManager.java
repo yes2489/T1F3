@@ -1,7 +1,9 @@
-package com.waiting.system.model;
+package com.waiting.system.service;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.waiting.system.model.Reservation;
 
 /**
  * 이 클래스는 예약 객체들을 queue에 넣어 관리합니다.
