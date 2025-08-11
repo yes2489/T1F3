@@ -48,9 +48,9 @@ public class CommandProcessor {
         UIHandler.addLine("   - 해당 전화번호의 예약을 취소합니다.");
         UIHandler.addLine("   - 예) cancel 01012345678 1");
         UIHandler.addLine("");
-        UIHandler.addLine("3) quit <식당ID:int> <퇴장인원:int>");
+        UIHandler.addLine("3) quit <퇴장인원:int> <식당ID:int>");
         UIHandler.addLine("   - 손님 퇴장 후 입장 대기 중인 다음 대기 손님을 안내합니다.");
-        UIHandler.addLine("   - 예) quit 101 12");
+        UIHandler.addLine("   - 예) quit 2 1");
         UIHandler.addLine("");
         UIHandler.addLine("4) help");
         UIHandler.addLine("   - 명령어와 사용법을 표시합니다.");
@@ -60,7 +60,7 @@ public class CommandProcessor {
     private void handleQuit(String[] tokens) {
         // 인수 검증
         if (tokens.length < 3) {
-            UIHandler.addLine("사용법: quit <식당ID:int> <퇴장인원:int>");
+            UIHandler.addLine("사용법: quit <퇴장인원:int> <식당ID:int>");
             UIHandler.flush("");
             return;
         }
