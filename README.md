@@ -81,15 +81,13 @@ mvn clean package
 mvn install:install-file -Dfile=lib/Console.jar -DgroupId=com.example -DartifactId=console -Dversion=1.0 -Dpackaging=jar
 ```
 
-> 위 라이브러리는 pom.xml에서 다음과 같이 system scope로 참조됩니다:
+> 등록 후, pom.xml에서는 일반 의존성으로 참조합니다
 
 ```xml
 <dependency>
   <groupId>com.example</groupId>
   <artifactId>console</artifactId>
   <version>1.0</version>
-  <scope>system</scope>
-  <systemPath>${project.basedir}/lib/Console.jar</systemPath>
 </dependency>
 ```
 
