@@ -1,4 +1,4 @@
-package com.waiting.system.util;
+package com.waiting.system.view;
 
 public class UIHandler {
     // 현재 콘솔에 출력된 문자열 길이를 추적

@@ -3,7 +3,7 @@ package com.waiting.system.controller;
 import java.util.ArrayList;
 import com.waiting.system.model.Restaurant;
 import com.waiting.system.service.RestaurantManager;
-import com.waiting.system.util.UIHandler;
+import com.waiting.system.view.UIHandler;
 
 public class CommandProcessor {
     private final RestaurantManager manager;
